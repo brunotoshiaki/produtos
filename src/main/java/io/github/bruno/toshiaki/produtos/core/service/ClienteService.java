@@ -32,9 +32,7 @@ public class ClienteService {
     }
 
     public Cliente buscarPorId(Long id) {
-        return
-                clienteRepository.findById(id)
-                        .orElseThrow(ClienteNotFoundExeption::new);
+        return clienteRepository.findById(id).orElseThrow(ClienteNotFoundExeption::new);
     }
 
 
