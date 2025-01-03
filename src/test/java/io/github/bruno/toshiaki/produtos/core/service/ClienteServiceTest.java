@@ -3,9 +3,7 @@ package io.github.bruno.toshiaki.produtos.core.service;
 import io.github.bruno.toshiaki.produtos.core.exeption.ClienteNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.EmailAlreadyRegisteredExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
-import io.github.bruno.toshiaki.produtos.core.model.ClienteResponse;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteMapper;
-import io.github.bruno.toshiaki.produtos.mapper.ClienteResponseMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ClienteRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Cliente;
 import org.junit.jupiter.api.Test;
@@ -33,8 +31,6 @@ class ClienteServiceTest {
     @Mock
     private ClienteMapper clienteMapper;
 
-    @Mock
-    private ClienteResponseMapper clienteResponseMapper;
 
     @InjectMocks
     private ClienteService clienteService;
@@ -64,15 +60,15 @@ class ClienteServiceTest {
 
     @Test
     void shouldFindCliente() {
-        var clienteResponse = new ClienteResponse(1L, "nome", "email.com");
+
         var cliente = new Cliente();
         cliente.setEmail("email.com");
         cliente.setNome("nome");
         cliente.setId(1L);
-        when(clienteResponseMapper.fromEntity(cliente)).thenReturn(clienteResponse);
+
         when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
         var result = clienteService.buscarPorId(1L);
-        assertEquals(result, clienteResponse);
+        assertEquals("email.com", result.getEmail());
     }
 
     @Test
@@ -114,7 +110,6 @@ class ClienteServiceTest {
         cliente.setEmail("email.com");
         cliente.setId(1L);
         when(clienteMapper.fromDTO(clienteDTO)).thenReturn(cliente);
-        when(clienteRepository.findByEmail(any())).thenReturn(Optional.empty());
         when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
         clienteService.atualizar(clienteDTO, 1L);
         assertDoesNotThrow(() -> clienteService.atualizar(clienteDTO, 1L));
@@ -122,12 +117,18 @@ class ClienteServiceTest {
 
     @Test
     void shouldThrowEmailAlreadyRegisteredExeptionWhenUpdating() {
-        var clienteDTO = new ClienteDTO("nome", "email.com");
+        var clienteDTO = new ClienteDTO("nome", "carlos@email.com");
+        var clienteCarlos = new Cliente();
+        clienteCarlos.setEmail("carlos@email.com");
+        clienteCarlos.setNome("nome");
+
         var cliente = new Cliente();
         cliente.setEmail("email.com");
         cliente.setId(1L);
-        when(clienteMapper.fromDTO(clienteDTO)).thenReturn(cliente);
-        when(clienteRepository.findByEmail(cliente.getEmail())).thenReturn(Optional.of(cliente));
+        cliente.setNome("nome");
+        when(clienteMapper.fromDTO(clienteDTO)).thenReturn(clienteCarlos);
+        when(clienteRepository.findById(any())).thenReturn(Optional.of(cliente));
+        when(clienteRepository.findByEmail(any())).thenReturn(Optional.of(cliente));
         assertThrows(EmailAlreadyRegisteredExeption.class, () -> clienteService.atualizar(clienteDTO, 1L));
     }
 

@@ -3,6 +3,7 @@ package io.github.bruno.toshiaki.produtos.input;
 import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
 import io.github.bruno.toshiaki.produtos.core.model.ClienteResponse;
 import io.github.bruno.toshiaki.produtos.core.service.ClienteService;
+import io.github.bruno.toshiaki.produtos.mapper.ClienteResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final ClienteResponseMapper clienteResponseMapper;
 
     @PostMapping
     public ResponseEntity<Void> cadastrar(@RequestBody ClienteDTO cliente) {
@@ -30,13 +32,13 @@ public class ClienteController {
     @GetMapping("/{id}")
     public ResponseEntity<ClienteResponse> buscar(@PathVariable String id) {
         var cliente = clienteService.buscarPorId(Long.parseLong(id));
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(clienteResponseMapper.fromEntity(cliente));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
         clienteService.deletar(Long.parseLong(id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")

@@ -3,9 +3,7 @@ package io.github.bruno.toshiaki.produtos.core.service;
 import io.github.bruno.toshiaki.produtos.core.exeption.ClienteNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.EmailAlreadyRegisteredExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
-import io.github.bruno.toshiaki.produtos.core.model.ClienteResponse;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteMapper;
-import io.github.bruno.toshiaki.produtos.mapper.ClienteResponseMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ClienteRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Cliente;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ClienteMapper clienteMapper;
-    private final ClienteResponseMapper clienteResponseMapper;
+
 
     public void salvar(ClienteDTO clienteDTO) {
         var cliente = clienteMapper.fromDTO(clienteDTO);
@@ -33,28 +31,29 @@ public class ClienteService {
         return clienteRepository.findByEmail(email).isPresent();
     }
 
-    public ClienteResponse buscarPorId(Long id) {
-        return clienteResponseMapper.fromEntity(clienteRepository.findById(id).orElseThrow(ClienteNotFoundExeption::new));
+    public Cliente buscarPorId(Long id) {
+        return
+                clienteRepository.findById(id)
+                        .orElseThrow(ClienteNotFoundExeption::new);
     }
 
 
-
     public void deletar(Long id) {
-        var cliente = clienteRepository.findById(id).orElseThrow(ClienteNotFoundExeption::new);
+        var cliente = this.buscarPorId(id);
         clienteRepository.delete(cliente);
     }
 
     public void atualizar(ClienteDTO clienteDTO, Long id) {
         var clienteDto = clienteMapper.fromDTO(clienteDTO);
 
-        var clienteEncontrado = clienteRepository.findById(id).orElseThrow(ClienteNotFoundExeption::new);
+        var clienteEncontrado = this.buscarPorId(id);
 
-        if (!clienteEncontrado.getEmail().equals(clienteDto.getEmail())) {
+        if (!clienteEncontrado.getEmail().trim().equalsIgnoreCase(clienteDto.getEmail().trim())) {
             if (emailExists(clienteDto.getEmail())) {
                 throw new EmailAlreadyRegisteredExeption();
             }
+            clienteRepository.save(getCliente(id, clienteDto));
         }
-        clienteRepository.save(getCliente(id, clienteDto));
 
     }
 
