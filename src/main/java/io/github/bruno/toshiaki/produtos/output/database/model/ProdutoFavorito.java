@@ -1,29 +1,35 @@
 package io.github.bruno.toshiaki.produtos.output.database.model;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+
+@Getter
+@Setter
 @Entity
-@Data
-public class Cliente {
+public class ProdutoFavorito {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true, nullable = false)
     private Long id;
-    @Column(length = 250)
-    private String nome;
-    @Column(length = 50, unique = true)
-    private String email;
 
-    @OneToMany(mappedBy = "cliente")
-    private Set<ProdutoFavorito> produtoFavorito = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
+
+    @OneToMany(mappedBy = "produtoFavorito")
+    private Set<Produto> produtos = new HashSet<>();
+
 
 }

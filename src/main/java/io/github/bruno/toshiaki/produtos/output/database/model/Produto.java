@@ -8,12 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import lombok.ToString;
 
 
 @Entity
 @Data
-@ToString(exclude = {"cliente"})
+
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,7 +35,7 @@ public class Produto {
     private Double reviewScore;
 
     @ManyToOne
-    @JoinColumn(name = "id_produto")
-    private Cliente cliente;
+    @JoinColumn(name = "id_produto_favorito")
+    private ProdutoFavorito produtoFavorito;
 
 }
