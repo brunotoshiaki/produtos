@@ -1,0 +1,18 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:postgresql://localhost:5432/produto
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+     show-sql: true
+     hibernate:
+      ddl-auto: create-drop
+     properties:
+        hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
