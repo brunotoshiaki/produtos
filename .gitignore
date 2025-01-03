@@ -1,6 +1,2 @@
-/target/classes/io/github/bruno/toshiaki/produtos/Application.class
-/target/classes/application-hml.yml
-/target/classes/io/github/bruno/toshiaki/produtos/output/database/model/Cliente.class
-/target/classes/compose.yaml
-/target/classes/io/github/bruno/toshiaki/produtos/output/database/model/Produto.class
-/target/produtos-0.0.1-SNAPSHOT.jar
+/target/*
+/.idea/*
