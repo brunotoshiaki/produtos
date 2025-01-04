@@ -30,7 +30,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> buscar(@PathVariable String id) {
+    public ResponseEntity<ClienteResponse> buscar(@PathVariable("id") String id) {
         var cliente = clienteService.buscarPorId(Long.parseLong(id));
         return ResponseEntity.ok(clienteResponseMapper.fromEntity(cliente));
     }
@@ -45,7 +45,7 @@ public class ClienteController {
     public ResponseEntity<Void> atualizar(@PathVariable("id") String id,
                                           @RequestBody ClienteDTO cliente) {
 
-        clienteService.atualizar(cliente,Long.parseLong(id));
+        clienteService.atualizar(cliente, Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 

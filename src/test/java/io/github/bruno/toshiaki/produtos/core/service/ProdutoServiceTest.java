@@ -3,6 +3,7 @@ package io.github.bruno.toshiaki.produtos.core.service;
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoDTO;
 import io.github.bruno.toshiaki.produtos.mapper.ProdutoMapper;
+import io.github.bruno.toshiaki.produtos.mapper.ProdutoResponseMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ProdutoRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Produto;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ class ProdutoServiceTest {
 
     @InjectMocks
     private ProdutoService produtoService;
+
+    @Mock
+    private ProdutoResponseMapper produtoResponseMapper;
 
     @Test
    void shouldSaveProdut(){

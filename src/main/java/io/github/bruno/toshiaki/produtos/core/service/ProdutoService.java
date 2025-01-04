@@ -2,7 +2,9 @@ package io.github.bruno.toshiaki.produtos.core.service;
 
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoDTO;
+import io.github.bruno.toshiaki.produtos.core.model.ProdutoResponse;
 import io.github.bruno.toshiaki.produtos.mapper.ProdutoMapper;
+import io.github.bruno.toshiaki.produtos.mapper.ProdutoResponseMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ProdutoRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Produto;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final ProdutoMapper produtoMapper;
+    private final ProdutoResponseMapper produtoResponseMapper;
 
 
     public void salvar(ProdutoDTO dto) {
@@ -29,9 +32,9 @@ public class ProdutoService {
                         .orElseThrow(ProdutoNotFoundExeption::new);
     }
 
-    public Page<Produto> buscarPaginada(int pagina) {
+    public Page<ProdutoResponse> buscarPaginada(int pagina) {
         var pageable = PageRequest.of(pagina, 10);
-        return produtoRepository.findAll(pageable);
+        return produtoRepository.findAll(pageable).map(produtoResponseMapper::fromEntity);
     }
 
 
