@@ -3,6 +3,7 @@ package io.github.bruno.toshiaki.produtos.core.service;
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoAlreadyRegisteredExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoFavoritoDTO;
 import io.github.bruno.toshiaki.produtos.output.database.ProdutoFavoritoRepository;
+import io.github.bruno.toshiaki.produtos.output.database.ProdutoRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Cliente;
 import io.github.bruno.toshiaki.produtos.output.database.model.Produto;
 import io.github.bruno.toshiaki.produtos.output.database.model.ProdutoFavorito;
@@ -17,13 +18,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProdutoFavoritoServiceTest {
 
-    @Mock
-    private ProdutoFavoritoRepository produtoFavoritoRepository;
 
     @Mock
     private ProdutoService produtoService;
@@ -31,6 +32,11 @@ class ProdutoFavoritoServiceTest {
     @Mock
     private ClienteService clienteService;
 
+    @Mock
+    private ProdutoRepository produtoRepository;
+
+    @Mock
+    private ProdutoFavoritoRepository produtoFavoritoRepository;
 
     @InjectMocks
     private ProdutoFavoritoService produtoFavoritoService;
@@ -53,7 +59,8 @@ class ProdutoFavoritoServiceTest {
         when(produtoService.buscarPorId(any())).thenReturn(produto);
         when(clienteService.buscarPorId(any())).thenReturn(cliente);
         produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L));
-
+        when(produtoRepository.findProdutoById(any())).thenReturn(Optional.empty());
+        verify(produtoFavoritoRepository,times(1)).save(any(ProdutoFavorito.class));
         assertDoesNotThrow(() -> produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L)));
     }
 
@@ -61,14 +68,18 @@ class ProdutoFavoritoServiceTest {
     void shouldThrowProdutoAlreadyRegisteredExeptionWhenProdutoAlreadyInCart() {
         var cliente = new Cliente();
         cliente.setId(1L);
-        var produto = new Produto();
-        produto.setId(1L);
+
         var produtoFavorito = new ProdutoFavorito();
         produtoFavorito.setCliente(cliente);
+        var produto = new Produto();
+        produto.setPrice(10.0);
+        produto.setImage("image.jpg");
+        produto.setBrand("lala");
+        produto.setTitle("Sabonete");
+        produto.setReviewScore(6.0);
         when(clienteService.buscarPorId(1L)).thenReturn(cliente);
         when(produtoService.buscarPorId(1L)).thenReturn(produto);
-        when(produtoFavoritoRepository.findByCliente(cliente)).thenReturn(Optional.of(produtoFavorito));
-
+        when(produtoRepository.findProdutoById(any())).thenReturn(Optional.of(produto));
         assertThrows(ProdutoAlreadyRegisteredExeption.class, () -> produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L)));
     }
 

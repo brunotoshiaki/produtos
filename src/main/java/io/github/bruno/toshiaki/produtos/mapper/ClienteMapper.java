@@ -12,4 +12,5 @@ public interface ClienteMapper {
     @Mapping(target = "id", ignore = true)
     Cliente fromDTO(ClienteDTO clienteDTO);
 
+    ClienteDTO toDTO(Cliente cliente);
 }

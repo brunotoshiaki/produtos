@@ -1,12 +1,16 @@
 package io.github.bruno.toshiaki.produtos.input;
 
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoFavoritoDTO;
+import io.github.bruno.toshiaki.produtos.core.model.ProdutoFavoritoResponse;
 import io.github.bruno.toshiaki.produtos.core.service.ProdutoFavoritoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,4 +25,15 @@ public class ProdutoFavoritoController {
         produtoFavoritoService.adicionarCarrinho(produto);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoFavoritoResponse> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                          @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                                          @PathVariable("id") Long id) {
+
+        var result = produtoFavoritoService.listagem(page, size, id);
+
+        return ResponseEntity.ok().body(result);
+    }
+
 }

@@ -45,7 +45,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ProdutoResponse>> listagem(@RequestParam(value = "page", defaultValue = "1") Integer page) {
+    public ResponseEntity<List<ProdutoResponse>> listagem(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         var result = produtoService.buscarPaginada(page);
         return ResponseEntity.ok().body(result.getContent());
     }

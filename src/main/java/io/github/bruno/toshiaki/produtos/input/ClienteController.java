@@ -30,22 +30,22 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteResponse> buscar(@PathVariable("id") String id) {
-        var cliente = clienteService.buscarPorId(Long.parseLong(id));
+    public ResponseEntity<ClienteResponse> buscar(@PathVariable("id") Long id) {
+        var cliente = clienteService.buscarPorId(id);
         return ResponseEntity.ok(clienteResponseMapper.fromEntity(cliente));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
-        clienteService.deletar(Long.parseLong(id));
+    public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
+        clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable("id") String id,
+    public ResponseEntity<Void> atualizar(@PathVariable("id") Long id,
                                           @RequestBody ClienteDTO cliente) {
 
-        clienteService.atualizar(cliente, Long.parseLong(id));
+        clienteService.atualizar(cliente, id);
         return ResponseEntity.ok().build();
     }
 
