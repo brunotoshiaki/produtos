@@ -33,15 +33,17 @@ public class ProdutoFavoritoService {
     }
 
     private void adicionaCarrinho(Cliente cliente, ProdutoFavoritoDTO favoritoDTO) {
-        var produtoFavorito = new ProdutoFavorito();
-        produtoFavorito.setCliente(cliente);
         var produto = produtoService.buscarPorId(favoritoDTO.idProduto());
-
+        var produtoFavorito = new ProdutoFavorito();
         var produtoCadastrado = produtoRepository.findProdutoById(favoritoDTO.idProduto());
 
         if (produtoCadastrado.isPresent()) {
             throw new ProdutoAlreadyRegisteredExeption();
         } else {
+            var produtoFavoritoEncontrado = produtoFavoritoRepository.findByCliente(cliente);
+            produtoFavoritoEncontrado.ifPresent(favorito -> produtoFavorito.setId(favorito.getId()));
+            //novo
+            produtoFavorito.setCliente(cliente);
             produtoFavorito.getProdutos().add(produto);
             produtoFavoritoRepository.save(produtoFavorito);
             produto.setProdutoFavorito(produtoFavorito);
@@ -53,10 +55,7 @@ public class ProdutoFavoritoService {
         var cliente = clienteService.buscarPorId(idCliente);
         var pageable = PageRequest.of(page, size);
         var produtoFavoritos = produtoFavoritoRepository.findAllByCliente(idCliente, pageable).getContent();
-        var produtoResponse = produtoFavoritos
-                .stream()
-                .map(produtoResponseMapper::fromEntity)
-                .collect(Collectors.toSet());
+        var produtoResponse = produtoFavoritos.stream().map(produtoResponseMapper::fromEntity).collect(Collectors.toSet());
 
         return new ProdutoFavoritoResponse(clienteMapper.toDTO(cliente), produtoResponse);
     }

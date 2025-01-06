@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +51,11 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoResponse>> listagem(@RequestParam(value = "page", defaultValue = "0") Integer page) {
         var result = produtoService.buscarPaginada(page);
         return ResponseEntity.ok().body(result.getContent());
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<Void> atualizar(@PathVariable("id") Long id, @RequestBody ProdutoDTO produto) {
+        produtoService.atualizar(id, produto);
+        return ResponseEntity.ok().build();
     }
 }

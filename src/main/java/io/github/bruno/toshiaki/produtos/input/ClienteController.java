@@ -40,17 +40,33 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar", description = "Busca um Cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cadastrado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Cliente nao encontrado."),
+    })
     public ResponseEntity<ClienteResponse> buscar(@PathVariable("id") Long id) {
         var cliente = clienteService.buscarPorId(id);
         return ResponseEntity.ok(clienteResponseMapper.fromEntity(cliente));
     }
 
+    @Operation(summary = "Deletar", description = "Deletar um Cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Cliente nao encontrado."),
+    })
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Atualziar", description = "Atualiza um Cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente deletado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Cliente nao encontrado."),
+            @ApiResponse(responseCode = "422", description = "Email ja cadastrado."),
+    })
     @PutMapping("{id}")
     public ResponseEntity<Void> atualizar(@PathVariable("id") Long id,
                                           @RequestBody ClienteDTO cliente) {
