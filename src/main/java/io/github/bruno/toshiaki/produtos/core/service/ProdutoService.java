@@ -38,4 +38,13 @@ public class ProdutoService {
     }
 
 
+    public void atualizar(Long id, ProdutoDTO dto) {
+        var produto = produtoMapper.fromDTO(dto);
+        var produtoEncontrado = buscarPorId(id);
+        produto.setId(produtoEncontrado.getId());
+        produto.setProdutoFavorito(produtoEncontrado.getProdutoFavorito());
+        produtoRepository.save(produto);
+    }
+
+
 }
