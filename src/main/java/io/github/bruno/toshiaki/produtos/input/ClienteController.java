@@ -4,6 +4,10 @@ import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
 import io.github.bruno.toshiaki.produtos.core.model.ClienteResponse;
 import io.github.bruno.toshiaki.produtos.core.service.ClienteService;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteResponseMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,12 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("cliente")
 @RequiredArgsConstructor
+@Tag(name = "Clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;
     private final ClienteResponseMapper clienteResponseMapper;
 
     @PostMapping
+    @Operation(summary = "Cadastrar", description = "Cadastra um Cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cadastrado com sucesso."),
+            @ApiResponse(responseCode = "422", description = "Email ja Cadastrado."),
+    })
     public ResponseEntity<Void> cadastrar(@RequestBody ClienteDTO cliente) {
         clienteService.salvar(cliente);
         return ResponseEntity.ok().build();

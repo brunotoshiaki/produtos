@@ -2,8 +2,8 @@
 services:
   postgres:
     image: postgres:16.3
-    hostname: produto
-    container_name: produto
+    hostname: postgres
+    container_name: postgres
     restart: always
     ports:
       - "5432:5432"
@@ -12,18 +12,21 @@ services:
       POSTGRES_USER: root
       POSTGRES_DB: produto
     networks:
-      - library-network
+      - produto-network
 
-  pgadmin4:
-    image: dpage/pgadmin4:8.9
-    container_name: pgadmin4
+  produtos:
+    build:
+      context: ../../..
+      dockerfile: Dockerfile
+    hostname: produtos
+    container_name: produtos
     ports:
-      - "15432:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      - "8080:8085"
+    depends_on:
+      - postgres
     networks:
       - produto-network
+
 
 networks:
   produto-network:

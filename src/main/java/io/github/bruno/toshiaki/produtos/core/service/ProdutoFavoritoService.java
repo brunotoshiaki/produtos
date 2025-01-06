@@ -1,6 +1,7 @@
 package io.github.bruno.toshiaki.produtos.core.service;
 
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoAlreadyRegisteredExeption;
+import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoFavoritoDTO;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoFavoritoResponse;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteMapper;
@@ -57,9 +58,19 @@ public class ProdutoFavoritoService {
                 .map(produtoResponseMapper::fromEntity)
                 .collect(Collectors.toSet());
 
-
         return new ProdutoFavoritoResponse(clienteMapper.toDTO(cliente), produtoResponse);
     }
 
 
+    public void removeCarrinho(Long id, Long idProduto) {
+        var produtoFavorito = produtoFavoritoRepository.findById(id).orElseThrow(ProdutoNotFoundExeption::new);
+
+        var produto = produtoService.buscarPorId(idProduto);
+        produtoFavorito.getProdutos().remove(produto);
+
+        produtoFavoritoRepository.save(produtoFavorito);
+        produto.setProdutoFavorito(null);
+        produtoRepository.save(produto);
+
+    }
 }

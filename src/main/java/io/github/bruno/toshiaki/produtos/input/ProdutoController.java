@@ -4,6 +4,7 @@ import io.github.bruno.toshiaki.produtos.core.model.ProdutoDTO;
 import io.github.bruno.toshiaki.produtos.core.model.ProdutoResponse;
 import io.github.bruno.toshiaki.produtos.core.service.ProdutoService;
 import io.github.bruno.toshiaki.produtos.mapper.ProdutoResponseMapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
+@Tag(name = "Product")
 public class ProdutoController {
     private final ProdutoService produtoService;
     private final ProdutoResponseMapper produtoResponseMapper;
