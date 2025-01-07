@@ -5,6 +5,7 @@ import io.github.bruno.toshiaki.produtos.core.exeption.EmailAlreadyRegisteredExe
 import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ClienteRepository;
+import io.github.bruno.toshiaki.produtos.output.database.ProdutoFavoritoRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Cliente;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,9 @@ class ClienteServiceTest {
 
     @Mock
     private ClienteMapper clienteMapper;
+
+    @Mock
+    private ProdutoFavoritoRepository produtoFavoritoRepository;
 
 
     @InjectMocks
@@ -88,6 +92,7 @@ class ClienteServiceTest {
         cliente.setNome("nome");
         cliente.setId(1L);
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
+        when(produtoFavoritoRepository.findByCliente(any())).thenReturn(Optional.empty());
         clienteService.deletar(1L);
         verify(clienteRepository, times(1)).delete(cliente);
         assertDoesNotThrow(() -> clienteService.deletar(1L));

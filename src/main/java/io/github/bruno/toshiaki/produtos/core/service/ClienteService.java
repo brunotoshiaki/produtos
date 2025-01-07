@@ -5,6 +5,8 @@ import io.github.bruno.toshiaki.produtos.core.exeption.EmailAlreadyRegisteredExe
 import io.github.bruno.toshiaki.produtos.core.model.ClienteDTO;
 import io.github.bruno.toshiaki.produtos.mapper.ClienteMapper;
 import io.github.bruno.toshiaki.produtos.output.database.ClienteRepository;
+import io.github.bruno.toshiaki.produtos.output.database.ProdutoFavoritoRepository;
+import io.github.bruno.toshiaki.produtos.output.database.ProdutoRepository;
 import io.github.bruno.toshiaki.produtos.output.database.model.Cliente;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service;
 public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ClienteMapper clienteMapper;
-
+    private final ProdutoFavoritoRepository produtoFavoritoRepository;
+    private final ProdutoRepository produtoRepository;
 
     public void salvar(ClienteDTO clienteDTO) {
         var cliente = clienteMapper.fromDTO(clienteDTO);
@@ -38,6 +41,13 @@ public class ClienteService {
 
     public void deletar(Long id) {
         var cliente = this.buscarPorId(id);
+        var produtoFavorito = this.produtoFavoritoRepository.findByCliente(cliente);
+        if (produtoFavorito.isPresent()) {
+            var produtos = produtoRepository.findByCliente(cliente.getId());
+            produtos.forEach(p -> p.setProdutoFavorito(null));
+            produtoFavoritoRepository.delete(produtoFavorito.get());
+            produtoRepository.saveAll(produtos);
+        }
         clienteRepository.delete(cliente);
     }
 
