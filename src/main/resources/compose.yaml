@@ -21,7 +21,7 @@ services:
     hostname: produtos
     container_name: produtos
     ports:
-      - "8080:8085"
+      - "8080:8080"
     depends_on:
       - postgres
     networks:
