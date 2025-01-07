@@ -59,7 +59,7 @@ class ProdutoFavoritoServiceTest {
         when(produtoService.buscarPorId(any())).thenReturn(produto);
         when(clienteService.buscarPorId(any())).thenReturn(cliente);
         produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L));
-        when(produtoRepository.findProdutoById(any())).thenReturn(Optional.empty());
+        when(produtoRepository.findProdutoByIdAndIdCliente(any(),any())).thenReturn(Optional.empty());
         verify(produtoFavoritoRepository,times(1)).save(any(ProdutoFavorito.class));
         assertDoesNotThrow(() -> produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L)));
     }
@@ -79,7 +79,7 @@ class ProdutoFavoritoServiceTest {
         produto.setReviewScore(6.0);
         when(clienteService.buscarPorId(1L)).thenReturn(cliente);
         when(produtoService.buscarPorId(1L)).thenReturn(produto);
-        when(produtoRepository.findProdutoById(any())).thenReturn(Optional.of(produto));
+        when(produtoRepository.findProdutoByIdAndIdCliente(any(),any())).thenReturn(Optional.of(produto));
         assertThrows(ProdutoAlreadyRegisteredExeption.class, () -> produtoFavoritoService.adicionarCarrinho(new ProdutoFavoritoDTO(1L, 1L)));
     }
 

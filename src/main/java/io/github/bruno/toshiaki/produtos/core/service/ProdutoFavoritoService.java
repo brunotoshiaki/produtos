@@ -35,7 +35,7 @@ public class ProdutoFavoritoService {
     private void adicionaCarrinho(Cliente cliente, ProdutoFavoritoDTO favoritoDTO) {
         var produto = produtoService.buscarPorId(favoritoDTO.idProduto());
         var produtoFavorito = new ProdutoFavorito();
-        var produtoCadastrado = produtoRepository.findProdutoById(favoritoDTO.idProduto());
+        var produtoCadastrado = produtoRepository.findProdutoByIdAndIdCliente(favoritoDTO.idProduto(), cliente.getId());
 
         if (produtoCadastrado.isPresent()) {
             throw new ProdutoAlreadyRegisteredExeption();

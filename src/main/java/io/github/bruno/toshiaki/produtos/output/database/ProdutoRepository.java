@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-    @Query(" Select p from Produto p  join p.produtoFavorito pv where p.id =:id")
-    Optional<Produto> findProdutoById(Long id);
+    @Query(" Select p from Produto p  join p.produtoFavorito pv  join pv.cliente c where p.id =:id and c.id=:idCliente")
+    Optional<Produto> findProdutoByIdAndIdCliente(Long id, Long idCliente);
 }
