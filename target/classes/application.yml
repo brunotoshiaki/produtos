@@ -2,13 +2,21 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: jdbc:postgresql://localhost:5432/produto
-    username: root
-    password: root
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/produto}
+    username:  ${DATASOURCE_USERNAME:root}
+    password:  ${DATASOURCE_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
-
+  security:
+    user:
+      oauth2:
+        authorizationserver:
+          client:
+            oidc-client:
+              registration:
+                client-id: "oidc-client"
+                client-secret: "{noop}secret"
   jpa:
-     show-sql: true
+     show-sql: false
      hibernate:
       ddl-auto:  update
      properties:
