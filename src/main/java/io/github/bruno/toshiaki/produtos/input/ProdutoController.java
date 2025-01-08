@@ -42,8 +42,8 @@ public class ProdutoController {
                 .path("/{title}")
                 .path("/{image}")
                 .path("/{price}")
-                .path("/{id}")
-                .buildAndExpand(produto.getTitle(), produto.getImage(), produto.getPrice(), produto.getId()).toUri();
+
+                .buildAndExpand(produto.getTitle(), produto.getImage(), produto.getPrice()).toUri();
      var response = produtoResponseMapper.fromEntity(produto);
 
       response.add(Link.of(uri.toString()));
