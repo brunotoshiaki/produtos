@@ -6,6 +6,7 @@ import io.github.bruno.toshiaki.produtos.core.service.ProdutoService;
 import io.github.bruno.toshiaki.produtos.mapper.ProdutoResponseMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +44,10 @@ public class ProdutoController {
                 .path("/{price}")
                 .path("/{id}")
                 .buildAndExpand(produto.getTitle(), produto.getImage(), produto.getPrice(), produto.getId()).toUri();
+     var response = produtoResponseMapper.fromEntity(produto);
 
-        return ResponseEntity.created(uri).body(produtoResponseMapper.fromEntity(produto));
+      response.add(Link.of(uri.toString()));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/")
