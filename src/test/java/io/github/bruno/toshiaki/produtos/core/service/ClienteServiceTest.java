@@ -92,7 +92,7 @@ class ClienteServiceTest {
         cliente.setNome("nome");
         cliente.setId(1L);
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
-        when(produtoFavoritoRepository.findByCliente(any())).thenReturn(Optional.empty());
+        when(produtoFavoritoRepository.findProdutoFavoritoByCliente(any())).thenReturn(Optional.empty());
         clienteService.deletar(1L);
         verify(clienteRepository, times(1)).delete(cliente);
         assertDoesNotThrow(() -> clienteService.deletar(1L));

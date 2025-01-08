@@ -3,6 +3,7 @@ package io.github.bruno.toshiaki.produtos.input.exeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.ClienteNotFoundExeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.EmailAlreadyRegisteredExeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoAlreadyRegisteredExeption;
+import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoFavoritoExeption;
 import io.github.bruno.toshiaki.produtos.core.exeption.ProdutoNotFoundExeption;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(ProdutoAlreadyRegisteredExeption.class)
     public ResponseEntity<StandardError> produtoAlreadyRegisteredExeption(ProdutoAlreadyRegisteredExeption e) {
+        StandardError err = new StandardError(HttpStatus.UNPROCESSABLE_ENTITY.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
+    }
+
+    @ExceptionHandler(ProdutoFavoritoExeption.class)
+    public ResponseEntity<StandardError> produtoFavoritoExeption(ProdutoFavoritoExeption e) {
         StandardError err = new StandardError(HttpStatus.UNPROCESSABLE_ENTITY.value(), e.getMessage(), System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
     }

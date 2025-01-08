@@ -1,18 +1,11 @@
 package io.github.bruno.toshiaki.produtos.output.database.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Getter
@@ -20,16 +13,17 @@ import java.util.Set;
 @Entity
 public class ProdutoFavorito {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    @JsonIgnore
+    private ItemPk id = new ItemPk();
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    public ProdutoFavorito() {
 
-    @OneToMany(mappedBy = "produtoFavorito")
-    private Set<Produto> produtos = new HashSet<>();
+    }
 
-
+    public ProdutoFavorito(Cliente cliente, Produto produto) {
+        super();
+        id.setCliente(cliente);
+        id.setProduto(produto);
+    }
 }

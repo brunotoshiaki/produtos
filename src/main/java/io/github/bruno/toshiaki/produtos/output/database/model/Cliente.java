@@ -23,7 +23,7 @@ public class Cliente {
     @Column(length = 50, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "id.cliente")
     private Set<ProdutoFavorito> produtoFavorito = new HashSet<>();
 
 }
